@@ -18,7 +18,7 @@ namespace ETSlipsMigrationTool.Interface
 
         Task DeleteCategories();
 
-        Task DeletePrefixes();
+        Task DeletePrefixs();
 
         Task DeletePairs();
 

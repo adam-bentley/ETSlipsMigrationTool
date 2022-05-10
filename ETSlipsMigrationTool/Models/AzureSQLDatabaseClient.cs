@@ -19,44 +19,68 @@ namespace ETSlipsMigrationTool.Models
 
         public async Task DeletePairs() => await DeleteTable("pairs");
 
-        public async Task DeletePrefixes() => await DeleteTable("prefixes");
+        public async Task DeletePrefixs() => await DeleteTable("prefixs");
 
         public async Task DeleteRuns() => await DeleteTable("runs");
 
         public async Task InsertCategories(List<Category> categories)
         {
             using SqlConnection conn = new(_connectionString);
-            string sql = $"INSERT INTO categories (id, name) VALUES ";
+            string sql = $"INSERT INTO categories (name) VALUES ";
 
-            StringBuilder stringBuilder = new();
+            StringBuilder values = new();
 
             for (int i = 0; i < categories.Count; i++)
             {
-                //stringBuilder.Append($"({categories[i].Id}, {categories[i].Name})");
-                stringBuilder.Append($"(@id{i}, @name{i})");
+                values.Append($"(@name{i})");
 
                 if (i == categories.Count - 1)
-                    stringBuilder.Append(';');
+                    values.Append(';');
                 else
-                    stringBuilder.Append(',');
+                    values.Append(',');
             }
 
             await conn.OpenAsync();
-            using SqlCommand cmd = new(sql, conn);
+            using SqlCommand cmd = new(sql + values.ToString(), conn);
 
             for (int i = 0; i < categories.Count; i++)
             {
-                cmd.Parameters.AddWithValue($"id{i}", categories[i].Id);
                 cmd.Parameters.AddWithValue($"name{i}", categories[i].Name);
             }
 
+            
             await cmd.ExecuteNonQueryAsync();
             await conn.CloseAsync();
         }
 
-        public Task InsertEvents(List<RaceEvent> raceEvents)
+        public async Task InsertEvents(List<RaceEvent> raceEvents)
         {
-            throw new NotImplementedException();
+            using SqlConnection conn = new(_connectionString);
+            string sql = $"INSERT INTO events (name) VALUES ";
+
+            StringBuilder values = new();
+
+            for (int i = 0; i < raceEvents.Count; i++)
+            {
+                values.Append($"(@name{i})");
+
+                if (i == raceEvents.Count - 1)
+                    values.Append(';');
+                else
+                    values.Append(',');
+            }
+
+            await conn.OpenAsync();
+            using SqlCommand cmd = new(sql + values.ToString(), conn);
+
+            for (int i = 0; i < raceEvents.Count; i++)
+            {
+                cmd.Parameters.AddWithValue($"id{i}", raceEvents[i].Id);
+                cmd.Parameters.AddWithValue($"name{i}", raceEvents[i].Name);
+            }
+
+            await cmd.ExecuteNonQueryAsync();
+            await conn.CloseAsync();
         }
 
         public Task InsertPairs(List<Pair> pairs)
@@ -64,15 +88,43 @@ namespace ETSlipsMigrationTool.Models
             throw new NotImplementedException();
         }
 
-        public Task InsertPrefixes(List<Prefix> prefixes)
+        public async Task InsertPrefixes(List<Prefix> prefixes)
         {
-            throw new NotImplementedException();
+            using SqlConnection conn = new(_connectionString);
+            string sql = $"INSERT INTO prefixs (id, category_id, name) VALUES ";
+
+            StringBuilder values = new();
+
+            for (int i = 0; i < prefixes.Count; i++)
+            {
+                values.Append($"(@id{i}, @category_id{i}, @name{i})");
+
+                if (i == prefixes.Count - 1)
+                    values.Append(';');
+                else
+                    values.Append(',');
+            }
+
+            await conn.OpenAsync();
+            using SqlCommand cmd = new(sql + values.ToString(), conn);
+
+            for (int i = 0; i < prefixes.Count; i++)
+            {
+                cmd.Parameters.AddWithValue($"id{i}", prefixes[i].Id);
+                cmd.Parameters.AddWithValue($"category_id{i}", prefixes[i].CategoryId);
+                cmd.Parameters.AddWithValue($"name{i}", prefixes[i].Name);
+            }
+
+            await cmd.ExecuteNonQueryAsync();
+            await conn.CloseAsync();
         }
 
         public Task InsertRuns(List<Run> runs)
         {
             throw new NotImplementedException();
         }
+
+        #region Lists
 
         public Task<List<Category>> ListCategories() => throw new NotImplementedException();
 
@@ -83,6 +135,8 @@ namespace ETSlipsMigrationTool.Models
         public Task<List<Prefix>> ListPrefixes() => throw new NotImplementedException();
 
         public Task<List<Run>> ListRuns() => throw new NotImplementedException();
+
+        #endregion
 
         private async Task DeleteTable(string tableName)
         {

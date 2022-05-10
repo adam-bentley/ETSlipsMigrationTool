@@ -18,10 +18,10 @@ namespace ETSlipsMigrationTool.Models
 
         public Task DeletePairs() => throw new NotImplementedException();
 
-        public Task DeletePrefixes() => throw new NotImplementedException();
+        public Task DeletePrefixs() => throw new NotImplementedException();
 
         public Task DeleteRuns() => throw new NotImplementedException();
-
+    
         public Task InsertCategories(List<Category> categories) => throw new NotImplementedException();
 
         public Task InsertEvents(List<RaceEvent> raceEvents) => throw new NotImplementedException();
@@ -35,7 +35,7 @@ namespace ETSlipsMigrationTool.Models
         public async Task<List<Category>> ListCategories()
         {
             List<Category> categories = new();
-            string sql = "SELECT id, name from categories";
+            string sql = "SELECT id, name from categories order by id";
 
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
@@ -54,7 +54,7 @@ namespace ETSlipsMigrationTool.Models
         public async Task<List<RaceEvent>> ListEvents()
         {
             List<RaceEvent> raceEvents = new();
-            string sql = "SELECT id, name from events";
+            string sql = "SELECT id, name from events order by id";
 
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
@@ -73,7 +73,7 @@ namespace ETSlipsMigrationTool.Models
         public async Task<List<Pair>> ListPairs()
         {
             List<Pair> pairs = new();
-            string sql = "SELECT timestamp, event, category, round, finish FROM `pairs`;";
+            string sql = "SELECT timestamp, event, category, round, finish FROM `pairs` order by timestamp;";
 
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
@@ -92,7 +92,7 @@ namespace ETSlipsMigrationTool.Models
         public async Task<List<Prefix>> ListPrefixes()
         {
             List<Prefix> prefixs = new();
-            string sql = "SELECT id, category_id, name from prefixs";
+            string sql = "SELECT id, category_id, name from prefixs order by id";
 
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
@@ -112,7 +112,7 @@ namespace ETSlipsMigrationTool.Models
         {
             List<Run> runs = new();
             string sql = @"SELECT timestamp, racenumber, prefix, drivername, lane, runs.index, reaction, et60, et330, et594,
-et660, sp660, et936, et1000, sp1000, et1254, et1320, sp1320, result, remarks  FROM `runs`;";
+et660, sp660, et936, et1000, sp1000, et1254, et1320, sp1320, result, remarks  FROM `runs` order by timestamp;";
 
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();

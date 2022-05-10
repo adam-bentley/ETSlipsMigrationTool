@@ -26,14 +26,15 @@ List<Run> runs = await mySQL.ListRuns();
 
 await azureSQL.DeleteRuns();
 await azureSQL.DeletePairs();
-await azureSQL.DeletePrefixes();
+await azureSQL.DeletePrefixs();
 await azureSQL.DeleteCategories();
 await azureSQL.DeleteEvents();
 
-await azureSQL.InsertEvents(raceEvents);
+
 await azureSQL.InsertCategories(categories);
+await azureSQL.InsertEvents(raceEvents);
 await azureSQL.InsertPrefixes(prefixes);
-await azureSQL.InsertPairs(pairs);
-await azureSQL.InsertRuns(runs);
+//await azureSQL.InsertPairs(pairs);
+//await azureSQL.InsertRuns(runs);
 
 Console.WriteLine("Data loaded");
