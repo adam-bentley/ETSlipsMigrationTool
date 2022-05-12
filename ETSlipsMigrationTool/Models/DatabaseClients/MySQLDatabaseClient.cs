@@ -1,37 +1,44 @@
 ﻿using ETSlipsMigrationTool.Interface;
 using MySql.Data.MySqlClient;
 
-namespace ETSlipsMigrationTool.Models
+namespace ETSlipsMigrationTool.Models.DatabaseClients
 {
-    internal class MySQLDatabaseClient : IDatabaseClient
+    /// <summary>
+    /// A MySQL client
+    /// </summary>
+    /// <seealso cref="ETSlipsMigrationTool.Interface.ISourceDatabase" />
+    internal class MySQLDatabaseClient : ISourceDatabase
     {
+        #region Private fields
+
+        /// <summary>
+        /// The database connection string
+        /// </summary>
         private readonly string _connectionString;
 
+        #endregion Private fields
+
+        #region Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MySQLDatabaseClient"/> class.
+        /// </summary>
+        /// <param name="connectionString">The connection string.</param>
         public MySQLDatabaseClient(string connectionString)
         {
             _connectionString = connectionString;
         }
 
-        public Task DeleteCategories() => throw new NotImplementedException();
+        #endregion Constructors
 
-        public Task DeleteEvents() => throw new NotImplementedException();
+        #region List queries
 
-        public Task DeletePairs() => throw new NotImplementedException();
-
-        public Task DeletePrefixs() => throw new NotImplementedException();
-
-        public Task DeleteRuns() => throw new NotImplementedException();
-    
-        public Task InsertCategories(List<Category> categories) => throw new NotImplementedException();
-
-        public Task InsertEvents(List<RaceEvent> raceEvents) => throw new NotImplementedException();
-
-        public Task InsertPairs(List<Pair> pairs) => throw new NotImplementedException();
-
-        public Task InsertPrefixes(List<Prefix> prefixes) => throw new NotImplementedException();
-
-        public Task InsertRuns(List<Run> runs) => throw new NotImplementedException();
-
+        /// <summary>
+        /// Gets a lists of all categories from the categories table.
+        /// </summary>
+        /// <returns>
+        /// A list of categories
+        /// </returns>
         public async Task<List<Category>> ListCategories()
         {
             List<Category> categories = new();
@@ -51,6 +58,12 @@ namespace ETSlipsMigrationTool.Models
             return categories;
         }
 
+        /// <summary>
+        /// Gets a lists of all events from the events table.
+        /// </summary>
+        /// <returns>
+        /// A list of events
+        /// </returns>
         public async Task<List<RaceEvent>> ListEvents()
         {
             List<RaceEvent> raceEvents = new();
@@ -70,6 +83,12 @@ namespace ETSlipsMigrationTool.Models
             return raceEvents;
         }
 
+        /// <summary>
+        /// Gets a lists of all pairs from the pairs table.
+        /// </summary>
+        /// <returns>
+        /// A list of pairs
+        /// </returns>
         public async Task<List<Pair>> ListPairs()
         {
             List<Pair> pairs = new();
@@ -89,6 +108,12 @@ namespace ETSlipsMigrationTool.Models
             return pairs;
         }
 
+        /// <summary>
+        /// Gets a lists of all prefixs from the prefixs table.
+        /// </summary>
+        /// <returns>
+        /// A list of prefixs
+        /// </returns>
         public async Task<List<Prefix>> ListPrefixes()
         {
             List<Prefix> prefixs = new();
@@ -108,6 +133,12 @@ namespace ETSlipsMigrationTool.Models
             return prefixs;
         }
 
+        /// <summary>
+        /// Gets a lists of all runs from the runs table.
+        /// </summary>
+        /// <returns>
+        /// A list of runs
+        /// </returns>
         public async Task<List<Run>> ListRuns()
         {
             List<Run> runs = new();
@@ -158,5 +189,7 @@ et660, sp660, et936, et1000, sp1000, et1254, et1320, sp1320, result, remarks  FR
 
             return runs;
         }
+
+        #endregion List queries
     }
 }

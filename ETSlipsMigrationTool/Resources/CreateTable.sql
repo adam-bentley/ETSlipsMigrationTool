@@ -1,23 +1,36 @@
-# ETSlipsMigrationTool
-The ETSlips migration tool takes data from the old GoDaddy MySQL database and transfers it to an AzureSQL server in the cloud. It: 
-1. Fetches all the data from MySQL server.
-2. Deletes all the data from the AzureSQL server.
-3. Uploads the new data into the AzureSQL server.
+DROP table runs;
+DROP table pairs;
+DROP table prefixs;
+DROP table categories;
+DROP table events;
 
-##  Table Structure
-Data is migrated from the following tables:
-``` 
+--
+-- Table structure for table "categories"
+--
+
 CREATE TABLE "categories" (
   "id" int NOT NULL IDENTITY PRIMARY KEY,
   "name" varchar(32) NOT NULL,
   CONSTRAINT u_cat_name UNIQUE(name),
 );
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table "events"
+--
+
 CREATE TABLE "events" (
   "id" int NOT NULL IDENTITY PRIMARY KEY ,
   "name" varchar(60) NOT NULL,
   CONSTRAINT u_event_name UNIQUE(name),
 );
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table "pairs"
+--
 
 CREATE TABLE "pairs" (
   "timestamp" datetime NOT NULL PRIMARY KEY,
@@ -29,6 +42,12 @@ CREATE TABLE "pairs" (
   CONSTRAINT fk_pairs_categories FOREIGN KEY (category) REFERENCES categories(id)
 ); 
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table "prefixs"
+--
+
 CREATE TABLE "prefixs" (
   "id" int NOT NULL IDENTITY PRIMARY KEY,
   "category_id" int NOT NULL,
@@ -37,6 +56,11 @@ CREATE TABLE "prefixs" (
   CONSTRAINT fk_prefixs_categories FOREIGN KEY (category_id) REFERENCES categories(id)
 );
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table "runs"
+--
 
 CREATE TABLE "runs" (
   "timestamp" datetime NOT NULL,
@@ -61,12 +85,4 @@ CREATE TABLE "runs" (
   "remarks" varchar(255) DEFAULT NULL,
   CONSTRAINT fk_runs_prefix FOREIGN KEY (prefix) REFERENCES prefixs(id),
   CONSTRAINT pk_timestamp_runs PRIMARY KEY (timestamp, lane)
-); 
-```
-
-**The permit column (categories), and the flagged columns (categories, events, prefixs) are not migrated since these columns are no longer used.**
-
-**`ET936` is renamed to `ET934` as its a typo in the original system.**
-
-## Foreign Keys
-The primary keys for the events, categories and prefixs table are assigned by the MySQL Database via `auto incrementing`. However, to keep that behaviour in the AzureSQL database, it's required to assign new primary keys. This presents a problem that foreign key constraints are no longer met during the migration. To counter this, when inserted, the `new ID` is added to a dictionary with the `old ID` as the key. Then when the foreign keys are inserted, the lookup is done, and the new key is inserted.
+);
