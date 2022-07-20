@@ -22,10 +22,10 @@ namespace ETSlipsMigrationTool.Interface
         Task DeleteCategories();
 
         /// <summary>
-        /// Deletes all prefixs from the prefixs table.
+        /// Deletes all prefixes from the prefixes table.
         /// </summary>
         /// <returns>An awaitable task</returns>
-        Task DeletePrefixs();
+        Task DeletePrefixes();
 
         /// <summary>
         /// Deletes all pairs from the pairs table.
@@ -58,9 +58,9 @@ namespace ETSlipsMigrationTool.Interface
         Task<Dictionary<int, int>> InsertCategories(List<Category> categories);
 
         /// <summary>
-        /// Inserts a list of prefixs into the prefixs table.
+        /// Inserts a list of prefixes into the prefixes table.
         /// </summary>
-        /// <param name="raceEvents">The list of prefixs.</param>
+        /// <param name="raceEvents">The list of prefixes.</param>
         /// <returns>A dictionary of old ID to new ID mappings</returns>
         Task<Dictionary<int, int>> InsertPrefixes(List<Prefix> prefixes, Dictionary<int, int> categoryIdMappings);
 

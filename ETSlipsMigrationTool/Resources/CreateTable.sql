@@ -1,6 +1,6 @@
 DROP table runs;
 DROP table pairs;
-DROP table prefixs;
+DROP table prefixes;
 DROP table categories;
 DROP table events;
 
@@ -45,15 +45,15 @@ CREATE TABLE "pairs" (
 -- --------------------------------------------------------
 
 --
--- Table structure for table "prefixs"
+-- Table structure for table "prefixes"
 --
 
-CREATE TABLE "prefixs" (
+CREATE TABLE "prefixes" (
   "id" int NOT NULL IDENTITY PRIMARY KEY,
   "category_id" int NOT NULL,
   "name" varchar(12) NOT NULL,
   CONSTRAINT u_prefix_name UNIQUE(name, category_id),
-  CONSTRAINT fk_prefixs_categories FOREIGN KEY (category_id) REFERENCES categories(id)
+  CONSTRAINT fk_prefixes_categories FOREIGN KEY (category_id) REFERENCES categories(id)
 );
 
 -- --------------------------------------------------------
@@ -65,24 +65,24 @@ CREATE TABLE "prefixs" (
 CREATE TABLE "runs" (
   "timestamp" datetime NOT NULL,
   "racenumber" varchar(8) NOT NULL,
-  "prefix" int DEFAULT NULL,
+  "prefix" int NOT NULL,
   "drivername" text,
   "lane" varchar(1) NOT NULL,
-  "index" decimal(4,2) DEFAULT NULL,
+  "index" decimal(4,2) NOT NULL,
   "reaction" decimal(6,4) NOT NULL,
-  "et60" decimal(6,4) DEFAULT NULL,
-  "et330" decimal(6,4) DEFAULT NULL,
-  "et594" decimal(6,4) DEFAULT NULL,
-  "et660" decimal(6,4) DEFAULT NULL,
-  "sp660" decimal(5,2) DEFAULT NULL,
-  "et934" decimal(6,4) DEFAULT NULL,
-  "et1000" decimal(6,4) DEFAULT NULL,
-  "sp1000" decimal(5,2) DEFAULT NULL,
-  "et1254" decimal(6,4) DEFAULT NULL,
-  "et1320" decimal(6,4) DEFAULT NULL,
-  "sp1320" decimal(5,2) DEFAULT NULL,
-  "result" varchar(255) DEFAULT NULL,
-  "remarks" varchar(255) DEFAULT NULL,
-  CONSTRAINT fk_runs_prefix FOREIGN KEY (prefix) REFERENCES prefixs(id),
+  "et60" decimal(6,4) NOT NULL,
+  "et330" decimal(6,4) NOT NULL,
+  "et594" decimal(6,4) NOT NULL,
+  "et660" decimal(6,4) NOT NULL,
+  "sp660" decimal(5,2) NOT NULL,
+  "et934" decimal(6,4) NOT NULL,
+  "et1000" decimal(6,4) NOT NULL,
+  "sp1000" decimal(5,2) NOT NULL,
+  "et1254" decimal(6,4) NOT NULL,
+  "et1320" decimal(6,4) NOT NULL,
+  "sp1320" decimal(5,2) NOT NULL,
+  "result" varchar(255) NOT NULL,
+  "remarks" varchar(255) NOT NULL,
+  CONSTRAINT fk_runs_prefix FOREIGN KEY (prefix) REFERENCES prefixes(id),
   CONSTRAINT pk_timestamp_runs PRIMARY KEY (timestamp, lane)
 );

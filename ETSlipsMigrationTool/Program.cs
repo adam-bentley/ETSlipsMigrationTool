@@ -25,7 +25,7 @@ List<Run> runs = await mySQL.ListRuns();
 Console.WriteLine("Deleting data");
 await azureSQL.DeleteRuns();
 await azureSQL.DeletePairs();
-await azureSQL.DeletePrefixs();
+await azureSQL.DeletePrefixes();
 await azureSQL.DeleteCategories();
 await azureSQL.DeleteEvents();
 

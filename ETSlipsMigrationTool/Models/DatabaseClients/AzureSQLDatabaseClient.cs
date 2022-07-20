@@ -50,9 +50,9 @@ namespace ETSlipsMigrationTool.Models.DatabaseClients
         public async Task DeletePairs() => await DeleteTable("pairs");
 
         /// <summary>
-        /// Deletes all prefixs from the prefixs table.
+        /// Deletes all prefixes from the prefixes table.
         /// </summary>
-        public async Task DeletePrefixs() => await DeleteTable("prefixs");
+        public async Task DeletePrefixes() => await DeleteTable("prefixes");
 
         /// <summary>
         /// Deletes all runs from the runs table.
@@ -168,19 +168,19 @@ namespace ETSlipsMigrationTool.Models.DatabaseClients
         /// <summary>
         /// Inserts the prefixes.
         /// </summary>
-        /// <param name="prefixs">The prefixs.</param>
+        /// <param name="prefixes">The prefixes.</param>
         /// <param name="categoryMappings">The category mappings.</param>
         /// <returns></returns>
-        public async Task<Dictionary<int, int>> InsertPrefixes(List<Prefix> prefixs, Dictionary<int, int> categoryMappings)
+        public async Task<Dictionary<int, int>> InsertPrefixes(List<Prefix> prefixes, Dictionary<int, int> categoryMappings)
         {
             using SqlConnection conn = new(_connectionString);
             await conn.OpenAsync();
 
             Dictionary<int, int> mappings = new();
 
-            foreach (var prefix in prefixs)
+            foreach (var prefix in prefixes)
             {
-                string sql = $"INSERT INTO prefixs (category_id, name) VALUES (@category_id, @name); SELECT SCOPE_IDENTITY();";
+                string sql = $"INSERT INTO prefixes (category_id, name) VALUES (@category_id, @name); SELECT SCOPE_IDENTITY();";
                 using SqlCommand cmd = new(sql, conn);
 
                 cmd.Parameters.AddWithValue("category_id", categoryMappings[prefix.CategoryId]);

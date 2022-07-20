@@ -22,9 +22,9 @@ namespace ETSlipsMigrationTool.Interface
         Task<List<Category>> ListCategories();
 
         /// <summary>
-        /// Gets a lists of all prefixs from the prefixs table.
+        /// Gets a lists of all prefixes from the prefixes table.
         /// </summary>
-        /// <returns>A list of prefixs</returns>
+        /// <returns>A list of prefixes</returns>
         Task<List<Prefix>> ListPrefixes();
 
         /// <summary>

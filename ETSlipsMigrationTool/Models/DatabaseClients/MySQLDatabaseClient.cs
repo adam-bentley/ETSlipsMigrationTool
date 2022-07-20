@@ -109,15 +109,15 @@ namespace ETSlipsMigrationTool.Models.DatabaseClients
         }
 
         /// <summary>
-        /// Gets a lists of all prefixs from the prefixs table.
+        /// Gets a lists of all prefixes from the prefixes table.
         /// </summary>
         /// <returns>
-        /// A list of prefixs
+        /// A list of prefixes
         /// </returns>
         public async Task<List<Prefix>> ListPrefixes()
         {
-            List<Prefix> prefixs = new();
-            string sql = "SELECT id, category_id, name from prefixs order by id";
+            List<Prefix> prefixes = new();
+            string sql = "SELECT id, category_id, name from prefixes order by id";
 
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
@@ -127,10 +127,10 @@ namespace ETSlipsMigrationTool.Models.DatabaseClients
             while (await reader.ReadAsync())
             {
                 Prefix prefix = new(reader.GetInt32(0), reader.GetInt32(1), reader.GetString(2));
-                prefixs.Add(prefix);
+                prefixes.Add(prefix);
             }
 
-            return prefixs;
+            return prefixes;
         }
 
         /// <summary>
