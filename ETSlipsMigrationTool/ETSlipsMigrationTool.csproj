@@ -13,6 +13,7 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
     <PackageReference Include="MySql.Data" Version="8.0.29" />
+    <PackageReference Include="Npgsql" Version="6.0.6" />
   </ItemGroup>
 
   <ItemGroup>
@@ -25,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Models\DatabaseClients\" />
     <Folder Include="Resources\" />
   </ItemGroup>
 

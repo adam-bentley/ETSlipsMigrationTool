@@ -1,7 +1,7 @@
 ﻿using ETSlipsMigrationTool.Helpers;
 using ETSlipsMigrationTool.Interface;
 using ETSlipsMigrationTool.Models;
-using ETSlipsMigrationTool.Models.DatabaseClients;
+using ETSlipsMigrationTool.Services.DestinationClients;
 using Microsoft.Extensions.Configuration;
 
 // Build the configuration
@@ -10,32 +10,31 @@ ConfigurationBuilderHelpers.BuildConfig(builder);
 IConfiguration build = builder.Build();
 
 // Create the database clients
-ISourceDatabase mySQL = new MySQLDatabaseClient(build.GetValue<string>("MySqlConnectionString"));
-IDestinationDatabase azureSQL = new AzureSQLDatabaseClient(build.GetValue<string>("AzureSqlConnectionString"));
+ISourceDatabase source = new ETSlipsMigrationTool.Services.SourceClients.AzureSQLDatabaseClient(build.GetValue<string>("SourceConnectionString"));
+IDestinationDatabase destination = new PostgresDatabaseClient(build.GetValue<string>("DestinationConnectionString"));
 
-// Fetch the data from the source database
+//Fetch the data from the source database
 Console.WriteLine("Fetching data");
-List<RaceEvent> raceEvents = await mySQL.ListEvents();
-List<Category> categories = await mySQL.ListCategories();
-List<Prefix> prefixes = await mySQL.ListPrefixes();
-List<Pair> pairs = await mySQL.ListPairs();
-List<Run> runs = await mySQL.ListRuns();
+List<RaceEvent> raceEvents = await source.ListEvents();
+List<Category> categories = await source.ListCategories();
+List<Prefix> prefixes = await source.ListPrefixes();
+List<Pair> pairs = await source.ListPairs();
+List<Run> runs = await source.ListRuns();
 
 // Delete any data from the destination database
 Console.WriteLine("Deleting data");
-await azureSQL.DeleteRuns();
-await azureSQL.DeletePairs();
-await azureSQL.DeletePrefixes();
-await azureSQL.DeleteCategories();
-await azureSQL.DeleteEvents();
+await destination.DeleteRuns();
+await destination.DeletePairs();
+await destination.DeletePrefixes();
+await destination.DeleteCategories();
+await destination.DeleteEvents();
 
 // Insert the new data into destination database
 Console.WriteLine("Inserting data");
-var raceEventMappings = await azureSQL.InsertEvents(raceEvents);
-var categoryMappings = await azureSQL.InsertCategories(categories);
-var prefixMappings = await azureSQL.InsertPrefixes(prefixes, categoryMappings);
-await azureSQL.InsertPairs(pairs, raceEventMappings, categoryMappings);
-await azureSQL.InsertRuns(runs, prefixMappings);
+var raceEventMappings = await destination.InsertEvents(raceEvents);
+var categoryMappings = await destination.InsertCategories(categories);
+var prefixMappings = await destination.InsertPrefixes(prefixes, categoryMappings);
+await destination.InsertPairs(pairs, raceEventMappings, categoryMappings);
+await destination.InsertRuns(runs, prefixMappings);
 
 Console.WriteLine("Operation completed");
-// extensions 

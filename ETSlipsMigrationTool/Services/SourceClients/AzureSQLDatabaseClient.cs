@@ -1,13 +1,10 @@
 ﻿using ETSlipsMigrationTool.Interface;
-using MySql.Data.MySqlClient;
+using ETSlipsMigrationTool.Models;
+using Microsoft.Data.SqlClient;
 
-namespace ETSlipsMigrationTool.Models.DatabaseClients
+namespace ETSlipsMigrationTool.Services.SourceClients
 {
-    /// <summary>
-    /// A MySQL client
-    /// </summary>
-    /// <seealso cref="ETSlipsMigrationTool.Interface.ISourceDatabase" />
-    internal class MySQLDatabaseClient : ISourceDatabase
+    internal class AzureSQLDatabaseClient : ISourceDatabase
     {
         #region Private fields
 
@@ -24,16 +21,15 @@ namespace ETSlipsMigrationTool.Models.DatabaseClients
         /// Initializes a new instance of the <see cref="MySQLDatabaseClient"/> class.
         /// </summary>
         /// <param name="connectionString">The connection string.</param>
-        public MySQLDatabaseClient(string connectionString)
+        public AzureSQLDatabaseClient(string connectionString)
         {
             _connectionString = connectionString;
         }
 
         #endregion Constructors
 
-        #region List queries
-
         /// <summary>
+
         /// Gets a lists of all categories from the categories table.
         /// </summary>
         /// <returns>
@@ -44,9 +40,9 @@ namespace ETSlipsMigrationTool.Models.DatabaseClients
             List<Category> categories = new();
             string sql = "SELECT id, name from categories order by id";
 
-            using var conn = new MySqlConnection(_connectionString);
+            using var conn = new SqlConnection(_connectionString);
             await conn.OpenAsync();
-            using var cmd = new MySqlCommand(sql, conn);
+            using var cmd = new SqlCommand(sql, conn);
             using var reader = await cmd.ExecuteReaderAsync();
 
             while (await reader.ReadAsync())
@@ -69,9 +65,9 @@ namespace ETSlipsMigrationTool.Models.DatabaseClients
             List<RaceEvent> raceEvents = new();
             string sql = "SELECT id, name from events order by id";
 
-            using var conn = new MySqlConnection(_connectionString);
+            using var conn = new SqlConnection(_connectionString);
             await conn.OpenAsync();
-            using var cmd = new MySqlCommand(sql, conn);
+            using var cmd = new SqlCommand(sql, conn);
             using var reader = await cmd.ExecuteReaderAsync();
 
             while (await reader.ReadAsync())
@@ -92,11 +88,11 @@ namespace ETSlipsMigrationTool.Models.DatabaseClients
         public async Task<List<Pair>> ListPairs()
         {
             List<Pair> pairs = new();
-            string sql = "SELECT timestamp, event, category, round, finish FROM `pairs` order by timestamp;";
+            string sql = "SELECT timestamp, event, category, round, finish FROM pairs order by timestamp;";
 
-            using var conn = new MySqlConnection(_connectionString);
+            using var conn = new SqlConnection(_connectionString);
             await conn.OpenAsync();
-            using var cmd = new MySqlCommand(sql, conn);
+            using var cmd = new SqlCommand(sql, conn);
             using var reader = await cmd.ExecuteReaderAsync();
 
             while (await reader.ReadAsync())
@@ -119,9 +115,9 @@ namespace ETSlipsMigrationTool.Models.DatabaseClients
             List<Prefix> prefixes = new();
             string sql = "SELECT id, category_id, name from prefixes order by id";
 
-            using var conn = new MySqlConnection(_connectionString);
+            using var conn = new SqlConnection(_connectionString);
             await conn.OpenAsync();
-            using var cmd = new MySqlCommand(sql, conn);
+            using var cmd = new SqlCommand(sql, conn);
             using var reader = await cmd.ExecuteReaderAsync();
 
             while (await reader.ReadAsync())
@@ -142,12 +138,12 @@ namespace ETSlipsMigrationTool.Models.DatabaseClients
         public async Task<List<Run>> ListRuns()
         {
             List<Run> runs = new();
-            string sql = @"SELECT timestamp, racenumber, prefix, drivername, lane, runs.index, reaction, et60, et330, et594,
-et660, sp660, et936, et1000, sp1000, et1254, et1320, sp1320, result, remarks  FROM `runs` order by timestamp;";
+            string sql = @"SELECT timestamp, racenumber, prefix, drivername, lane, runs.[index], reaction, et60, et330, et594,
+                    et660, sp660, et934, et1000, sp1000, et1254, et1320, sp1320, result, remarks  FROM ""runs"" order by timestamp;";
 
-            using var conn = new MySqlConnection(_connectionString);
+            using var conn = new SqlConnection(_connectionString);
             await conn.OpenAsync();
-            using var cmd = new MySqlCommand(sql, conn);
+            using var cmd = new SqlCommand(sql, conn);
             using var reader = await cmd.ExecuteReaderAsync();
 
             while (await reader.ReadAsync())
@@ -158,7 +154,7 @@ et660, sp660, et936, et1000, sp1000, et1254, et1320, sp1320, result, remarks  FR
                     var racenum = reader.GetString(1);
                     var prefix = reader.GetInt32(2);
                     var drivername = reader.GetString(3);
-                    var lane = reader.GetChar(4);
+                    var lane = reader.GetString(4)[0];
                     var index = reader.GetDecimal(5);
                     var reaction = reader.GetDecimal(6);
                     var et60 = reader.GetDecimal(7);
@@ -189,7 +185,5 @@ et660, sp660, et936, et1000, sp1000, et1254, et1320, sp1320, result, remarks  FR
 
             return runs;
         }
-
-        #endregion List queries
     }
 }

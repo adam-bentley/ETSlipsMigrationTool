@@ -1,13 +1,14 @@
 ﻿using ETSlipsMigrationTool.Interface;
+using ETSlipsMigrationTool.Models;
 using Microsoft.Data.SqlClient;
 using System.Text;
 
-namespace ETSlipsMigrationTool.Models.DatabaseClients
+namespace ETSlipsMigrationTool.Services.DestinationClients
 {
     /// <summary>
     /// An Azure SQL (SQL Server) client
     /// </summary>
-    /// <seealso cref="ETSlipsMigrationTool.Interface.IDestinationDatabase" />
+    /// <seealso cref="IDestinationDatabase" />
     internal class AzureSQLDatabaseClient : IDestinationDatabase
     {
         #region private fields
